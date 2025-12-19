@@ -1,15 +1,33 @@
+# Site Identity
 title: Anurag Sharma
 email: sharma.anuragkrishna@gmail.com
 description: >-
   Scientist at ISRO | Theoretical Computer Scientist | 
-  IIT-Delhi Alumnus | Quantum Computing | Cryptography 
+  IIT-Delhi Alumnus | Philosopher & Photographer
 
-# Using a remote theme for high-end styling without complex local setup
-remote_theme: pages-themes/cayman@v0.2.0
-plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
-  - jekyll-seo-tag
+# URL Configuration
+baseurl: "" 
+url: "https://akrishnash.github.io"
 
-# Sophisticated social links
+# Social & Professional Links
 github_username: akrishnash
 linkedin_username: anurag-sharma-krishna
+
+# Build Settings
+# Setting these to null ensures GitHub doesn't overwrite your "trendy" custom HTML
+theme: 
+remote_theme: 
+
+# Plugins for SEO and GitHub Pages support
+plugins:
+  - jekyll-seo-tag
+  - jekyll-feed
+
+# Exclude unnecessary files from the live site
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - .sass-cache
