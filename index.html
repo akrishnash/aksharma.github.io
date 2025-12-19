@@ -1,59 +1,100 @@
+---
+layout: default
+title: Anurag | Creative Space
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aksharma | Creative Space</title>
+    <title>Anurag | Creative Space</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@latest/dist/dotlottie-wc.js" type="module"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
-        body { background: #0f172a; color: white; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .glow:hover { box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); border-color: #38bdf8; transition: 0.3s; }
+        body { background: #050505; color: white; overflow-x: hidden; }
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .glow:hover { 
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.2); 
+            border-color: rgba(249, 115, 22, 0.5); 
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        /* Custom Scrollbar for that "Crafty" look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f97316; }
     </style>
 </head>
 <body class="font-sans">
 
-    <section class="h-screen flex flex-col justify-center items-center text-center px-4">
-        <h1 data-aos="zoom-out" class="text-6xl md:text-8xl font-black mb-4 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-            ALIVE & CODING
-        </h1>
-        <p data-aos="fade-up" data-aos-delay="300" class="text-xl text-gray-400 max-w-2xl">
-            Welcome to the digital playground of <span class="text-white font-bold">Anurag </span>. 
-            Exploring the intersection of design, code, and pure joy.
-        </p>
-    </section>
+    <div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;"></div>
 
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-        <div data-aos="fade-right" class="md:col-span-2 glass p-8 rounded-3xl glow">
-            <h2 class="text-3xl font-bold mb-4">The Vision</h2>
-            <p class="text-gray-400 leading-relaxed">I build things that live on the internet. From sleek portfolios to complex tools, everything is crafted with a focus on user experience and visual delight.</p>
+    <main class="relative z-10">
+        <section class="h-screen flex flex-col justify-center items-center text-center px-4">
+            <div data-aos="zoom-in" data-aos-duration="1500" class="mb-4">
+                <dotlottie-wc 
+                    src="https://lottie.host/0200508b-7036-4702-8a9d-476778f67389/x9j9TboyaP.lottie" 
+                    speed="1" 
+                    style="width: 300px; height: 300px;" 
+                    loop 
+                    autoplay>
+                </dotlottie-wc>
+            </div>
+
+            <h1 data-aos="fade-up" class="text-6xl md:text-8xl font-black mb-4 bg-gradient-to-r from-orange-400 via-white to-orange-600 bg-clip-text text-transparent italic tracking-tighter">
+                ALIVE & CODING
+            </h1>
+            <p data-aos="fade-up" data-aos-delay="300" class="text-xl text-gray-400 max-w-2xl font-light">
+                Welcome to the digital playground of <span class="text-white font-bold">Anurag</span>. 
+                Exploring the intersection of <span class="text-orange-500">design</span>, code, and pure joy.
+            </p>
+        </section>
+
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 p-6 mb-20">
+            <div data-aos="fade-right" class="md:col-span-2 glass p-10 rounded-[2.5rem] glow transition-all">
+                <h2 class="text-3xl font-bold mb-4 text-orange-500">The Vision</h2>
+                <p class="text-gray-400 text-lg leading-relaxed">I build things that live on the internet. From sleek portfolios to complex tools, everything is crafted with a focus on user experience and visual delight. In 2025, we don't just build sites; we build worlds.</p>
+            </div>
+            
+            <div data-aos="fade-left" class="glass p-10 rounded-[2.5rem] glow flex flex-col justify-center items-center group">
+                <div class="text-5xl mb-4 group-hover:rotate-12 transition-transform">🚀</div>
+                <h3 class="font-bold text-xl">Next Project</h3>
+                <p class="text-sm text-orange-500/70 mt-2 font-mono">COUNTDOWN ACTIVE</p>
+            </div>
         </div>
-        <div data-aos="fade-left" class="glass p-8 rounded-3xl glow flex flex-col justify-center items-center">
-            <span class="text-5xl mb-4">🚀</span>
-            <h3 class="font-bold">Next Project</h3>
-            <p class="text-sm text-gray-500">Launching 2025</p>
-        </div>
-    </div>
+    </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 1000, once: true });
-    </script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></div>
+    
+    <script>
+        // Initialize Animations
+        AOS.init({ duration: 1000, once: true });
 
-<script>
-  particlesJS("particles-js", {
-    particles: {
-      number: { value: 80 },
-      color: { value: "#ffffff" },
-      shape: { type: "circle" },
-      opacity: { value: 0.5 },
-      size: { value: 3 },
-      move: { enable: true, speed: 2 }
-    }
-  });
-</script>
+        // Initialize Particles
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 60, density: { enable: true, value_area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.2, random: true },
+                size: { value: 2, random: true },
+                line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.1, width: 1 },
+                move: { enable: true, speed: 1, direction: "none", random: true, straight: false, out_mode: "out" }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: { onhover: { enable: true, mode: "bubble" }, onclick: { enable: true, mode: "push" } },
+                modes: { bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, speed: 3 } }
+            }
+        });
+    </script>
 </body>
 </html>
