@@ -1,1 +1,44 @@
-<h1>Hello World</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aksharma | Creative Space</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        body { background: #0f172a; color: white; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glow:hover { box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); border-color: #38bdf8; transition: 0.3s; }
+    </style>
+</head>
+<body class="font-sans">
+
+    <section class="h-screen flex flex-col justify-center items-center text-center px-4">
+        <h1 data-aos="zoom-out" class="text-6xl md:text-8xl font-black mb-4 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+            ALIVE & CODING
+        </h1>
+        <p data-aos="fade-up" data-aos-delay="300" class="text-xl text-gray-400 max-w-2xl">
+            Welcome to the digital playground of <span class="text-white font-bold">akrishnash</span>. 
+            Exploring the intersection of design, code, and pure joy.
+        </p>
+    </section>
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+        <div data-aos="fade-right" class="md:col-span-2 glass p-8 rounded-3xl glow">
+            <h2 class="text-3xl font-bold mb-4">The Vision</h2>
+            <p class="text-gray-400 leading-relaxed">I build things that live on the internet. From sleek portfolios to complex tools, everything is crafted with a focus on user experience and visual delight.</p>
+        </div>
+        <div data-aos="fade-left" class="glass p-8 rounded-3xl glow flex flex-col justify-center items-center">
+            <span class="text-5xl mb-4">🚀</span>
+            <h3 class="font-bold">Next Project</h3>
+            <p class="text-sm text-gray-500">Launching 2025</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+</html>
