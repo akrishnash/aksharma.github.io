@@ -8,12 +8,12 @@ layout: null
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anurag K. Sharma | Scientist</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@300;400&family=Playfair+Display:italic,wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@300;400&family=Playfair+Display:italic,wght@400&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/futura-pt" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <link href="https://api.fontshare.com/v2/css?f[]=array@400,700&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=array@400,700&f[]=clash-display@400,600,700&display=swap" rel="stylesheet">
 
     <style>
         body { background: radial-gradient(circle at center, #000814 0%, #000000 100%); color: #a1a1aa; font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -22,23 +22,62 @@ layout: null
         
         #constellation-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.3; }
         .name-header {
-            font-family: 'Array', sans-serif;
-            /* Increased size: Minimum 2.5rem, Scalable 8vw, Maximum 6rem */
-            font-size: clamp(2.5rem, 8vw, 6rem); 
+            font-family: 'Clash Display', 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem); 
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.15em; 
-            line-height: 1;
+            letter-spacing: 0.08em; 
+            line-height: 1.1;
+            position: relative;
             
-            /* Clean white-to-indigo gradient */
-            background: linear-gradient(180deg, #FFFFFF 0%, #6366f1 100%);
+            /* Dynamic animated gradient */
+            background: linear-gradient(135deg, 
+                #ffffff 0%, 
+                #a78bfa 25%, 
+                #6366f1 50%, 
+                #8b5cf6 75%, 
+                #ec4899 100%);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             
-            /* Subtle glow to prevent it from getting lost in the Vanta background */
-            filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.4));
+            /* Enhanced glow effects */
+            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5)) 
+                    drop-shadow(0 0 40px rgba(139, 92, 246, 0.3))
+                    drop-shadow(0 0 60px rgba(168, 85, 247, 0.2));
+            
+            animation: gradientShift 8s ease infinite, nameFloat 6s ease-in-out infinite;
             
             margin-bottom: 1rem;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        @keyframes nameFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .name-letter {
+            display: inline-block;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+        
+        .name-letter:hover {
+            transform: scale(1.15) translateY(-8px) rotateZ(2deg);
+            filter: brightness(1.4) drop-shadow(0 0 15px rgba(167, 139, 250, 0.8));
+        }
+        
+        /* Glow effect on hover for the entire name */
+        .name-header:hover {
+            filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.7)) 
+                    drop-shadow(0 0 60px rgba(139, 92, 246, 0.5))
+                    drop-shadow(0 0 90px rgba(168, 85, 247, 0.3));
         }
 
         .section-label {
@@ -50,6 +89,24 @@ layout: null
             display: block;
             margin-bottom: 3rem;
             text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-label::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6366f1, #8b5cf6, transparent);
+            transition: width 0.6s ease;
+        }
+        
+        .section-label:hover::after {
+            width: 60%;
         }
 
         .glass { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
@@ -57,8 +114,46 @@ layout: null
         .project-row {
             border-bottom: 1px solid rgba(255,255,255,0.05);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
         }
-        .project-row:hover { background: rgba(99, 102, 241, 0.05); border-color: #6366f1; color: #fff; padding-left: 1rem; }
+        .project-row::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 0;
+            background: linear-gradient(180deg, #6366f1, #8b5cf6, #ec4899);
+            transition: height 0.4s ease;
+        }
+        .project-row:hover::before {
+            height: 100%;
+        }
+        .project-row:hover { 
+            background: rgba(99, 102, 241, 0.08); 
+            border-color: #6366f1; 
+            color: #fff; 
+            padding-left: 1.5rem; 
+            transform: translateX(8px);
+            box-shadow: -8px 0 30px rgba(99, 102, 241, 0.2);
+        }
+        
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Enhanced glass morphism */
+        .glass {
+            transition: all 0.3s ease;
+        }
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -83,8 +178,10 @@ layout: null
 
     <main class="relative z-10">
         <section class="min-h-[70vh] flex flex-col justify-center items-center text-center px-6 relative">
-           <h1 class="name-header mb-6" data-aos="fade-down">
-                    Anurag <span class="opacity-40 font-light">K.</span> Sharma
+           <h1 class="name-header mb-6" data-aos="fade-down" id="main-name">
+                <span class="name-letter">A</span><span class="name-letter">n</span><span class="name-letter">u</span><span class="name-letter">r</span><span class="name-letter">a</span><span class="name-letter">g</span>
+                <span class="opacity-30 font-light mx-2" style="letter-spacing: 0.2em;">K.</span>
+                <span class="name-letter">S</span><span class="name-letter">h</span><span class="name-letter">a</span><span class="name-letter">r</span><span class="name-letter">m</span><span class="name-letter">a</span>
             </h1>
             <div class="mono text-indigo-400/80 tracking-[0.5em] text-[10px] uppercase h-6">
                 <span id="typed-header"></span>
@@ -296,42 +393,7 @@ layout: null
         setInterval(updateClock, 1000);
         updateClock();
 
-        const canvas = document.getElementById('constellation-canvas');
-        const ctx = canvas.getContext('2d');
-        let points = [];
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            points = Array.from({length: 60}, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5
-            }));
-        }
-        function draw() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            points.forEach((p, i) => {
-                p.x += p.vx; p.y += p.vy;
-                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
-                points.slice(i + 1).forEach(p2 => {
-                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if(dist < 150) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(99, 102, 241, ${1 - dist/150})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
-                    }
-                });
-            });
-            requestAnimationFrame(draw);
-        }
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
-        draw();
+        // Canvas code removed - using Vanta.js for background effects instead
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     
@@ -366,6 +428,19 @@ layout: null
                 typeSpeed: 50,
                 backSpeed: 30,
                 loop: true
+            });
+            
+            // Add interactive letter effects
+            const nameLetters = document.querySelectorAll('.name-letter');
+            nameLetters.forEach((letter, index) => {
+                letter.addEventListener('mouseenter', () => {
+                    letter.style.transform = 'scale(1.2) translateY(-5px)';
+                    letter.style.filter = 'brightness(1.3)';
+                });
+                letter.addEventListener('mouseleave', () => {
+                    letter.style.transform = '';
+                    letter.style.filter = '';
+                });
             });
 
             // Initialize AOS (Animations)
