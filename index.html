@@ -16,7 +16,31 @@ layout: null
     <link href="https://api.fontshare.com/v2/css?f[]=array@400,700&f[]=clash-display@400,600,700&display=swap" rel="stylesheet">
 
     <style>
-        body { background: radial-gradient(circle at center, #000814 0%, #000000 100%); color: #a1a1aa; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #000814;
+            --text-primary: #a1a1aa;
+            --text-secondary: #e5e7eb;
+            --text-white: #ffffff;
+            --accent: #6366f1;
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #4b5563;
+            --text-secondary: #1f2937;
+            --text-white: #111827;
+            --accent: #6366f1;
+        }
+        
+        body { 
+            background: radial-gradient(circle at center, var(--bg-secondary) 0%, var(--bg-primary) 100%); 
+            color: var(--text-primary); 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            transition: background 0.3s ease, color 0.3s ease;
+        }
         .mono { font-family: 'JetBrains Mono', monospace; }
         .serif { font-family: 'Playfair Display', serif; }
         
@@ -129,6 +153,122 @@ layout: null
         #quote-toggle:active {
             transform: scale(0.95);
         }
+        
+        /* Theme toggle and controls */
+        .theme-controls {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: scale(1.1);
+        }
+        
+        /* Search overlay */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+        
+        .search-overlay.active {
+            display: flex;
+        }
+        
+        .search-container {
+            width: 90%;
+            max-width: 600px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 1rem;
+            color: var(--text-white);
+            outline: none;
+        }
+        
+        /* Skills visualization */
+        .skill-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .skill-tag:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 3rem;
+            padding-bottom: 3rem;
+            border-left: 2px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        
+        /* Reading list */
+        .book-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .book-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
+        }
     </style>
 </head>
 <body>
@@ -150,6 +290,29 @@ layout: null
     }
 </style>
 
+
+    <!-- Theme Controls -->
+    <div class="theme-controls">
+        <button class="control-btn" id="theme-toggle" aria-label="Toggle theme">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+        <button class="control-btn" id="language-toggle" aria-label="Toggle language">EN/HI</button>
+        <button class="control-btn" id="search-toggle" aria-label="Search">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="search-overlay">
+        <div class="search-container">
+            <input type="text" class="search-input" id="search-input" placeholder="Search...">
+            <div id="search-results" class="mt-4 text-gray-400"></div>
+        </div>
+    </div>
 
     <main class="relative z-10">
         <section class="min-h-[70vh] flex flex-col justify-center items-center text-center px-6 relative">
@@ -325,6 +488,259 @@ layout: null
             </div>
         </section>
 
+        <!-- Blog/Thoughts Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Blog_Thoughts</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="project-row glass rounded-2xl p-10">
+                    <h4 class="text-2xl font-bold text-white mb-4">Quantum Computing: The Next Frontier</h4>
+                    <p class="text-gray-400 text-sm mb-6 leading-relaxed">Exploring the intersection of quantum algorithms and classical computing, and what it means for the future of cryptography and security.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="mono text-indigo-400 text-[10px] uppercase tracking-widest">2024-12-15</span>
+                        <a href="#" class="mono text-[10px] text-indigo-400 hover:text-indigo-300 uppercase tracking-widest">Read More →</a>
+                    </div>
+                </div>
+                <div class="project-row glass rounded-2xl p-10">
+                    <h4 class="text-2xl font-bold text-white mb-4">5G Networks: Beyond Speed</h4>
+                    <p class="text-gray-400 text-sm mb-6 leading-relaxed">A deep dive into 5G core architecture, latency optimization, and the challenges of building next-generation networks.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="mono text-indigo-400 text-[10px] uppercase tracking-widest">2024-11-20</span>
+                        <a href="#" class="mono text-[10px] text-indigo-400 hover:text-indigo-300 uppercase tracking-widest">Read More →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills & Tech Stack Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Tech_Stack</span>
+            <div class="glass p-12 rounded-[3rem]">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="mono text-indigo-400 text-[11px] mb-6 uppercase tracking-[0.3em]">Quantum Computing</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag mono text-[10px]">Qiskit</span>
+                            <span class="skill-tag mono text-[10px]">Cirq</span>
+                            <span class="skill-tag mono text-[10px]">QASM</span>
+                            <span class="skill-tag mono text-[10px]">Quantum Algorithms</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mono text-indigo-400 text-[11px] mb-6 uppercase tracking-[0.3em]">Deep Learning</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag mono text-[10px]">PyTorch</span>
+                            <span class="skill-tag mono text-[10px]">TensorFlow</span>
+                            <span class="skill-tag mono text-[10px]">YOLOv8</span>
+                            <span class="skill-tag mono text-[10px]">Transformer</span>
+                            <span class="skill-tag mono text-[10px]">Federated Learning</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mono text-indigo-400 text-[11px] mb-6 uppercase tracking-[0.3em]">Networks & Security</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag mono text-[10px]">5G Core</span>
+                            <span class="skill-tag mono text-[10px]">Wireguard</span>
+                            <span class="skill-tag mono text-[10px]">PQC</span>
+                            <span class="skill-tag mono text-[10px]">VPN Security</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Career Timeline Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Career_Timeline</span>
+            <div class="glass p-16 rounded-[3rem]">
+                <div class="max-w-3xl">
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-bold text-white mb-2">Scientist C, ISRO</h4>
+                        <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-3">2023 - Present</p>
+                        <p class="text-gray-300 leading-relaxed">Leading research in Quantum Computing, Computer Networks, and Deep Learning architectures at the Department of Space.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-bold text-white mb-2">Infrastructure Architect, AIIMS New Delhi</h4>
+                        <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-3">2020 - 2023</p>
+                        <p class="text-gray-300 leading-relaxed">Architected mission-critical infrastructure and network systems for healthcare applications.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-bold text-white mb-2">M.Tech Computer Science, IIT Delhi</h4>
+                        <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-3">2018 - 2020</p>
+                        <p class="text-gray-300 leading-relaxed">Specialized in Computer Networks, Security, and Distributed Systems. Thesis on 5G Core Network Optimization.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications & Research Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Publications_Research</span>
+            <div class="space-y-4">
+                <div class="project-row py-8 glass rounded-2xl px-8">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2">Post-Quantum Cryptography in VPN Infrastructure</h4>
+                            <p class="text-gray-400 text-sm mb-4">Research on implementing quantum-resistant algorithms in Wireguard protocol for future-proof security.</p>
+                            <div class="flex gap-4 text-[9px] mono text-indigo-400/70 uppercase">
+                                <span>[ Cryptography ]</span> <span>[ Quantum Security ]</span> <span>[ VPN ]</span>
+                            </div>
+                        </div>
+                        <a href="#" class="px-6 py-2 border border-white/10 hover:bg-white hover:text-black transition-all mono text-[10px] tracking-widest uppercase">Read</a>
+                    </div>
+                </div>
+                <div class="project-row py-8 glass rounded-2xl px-8">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2">5G Core Function Caching Mechanisms</h4>
+                            <p class="text-gray-400 text-sm mb-4">Analysis and optimization of Free5GC core functions to reduce latency bottlenecks.</p>
+                            <div class="flex gap-4 text-[9px] mono text-indigo-400/70 uppercase">
+                                <span>[ 5G Networks ]</span> <span>[ Optimization ]</span>
+                            </div>
+                        </div>
+                        <a href="https://github.com/momus-s/Free5Gc_IITD" target="_blank" class="px-6 py-2 border border-white/10 hover:bg-white hover:text-black transition-all mono text-[10px] tracking-widest uppercase">GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Dashboard Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">System_Metrics</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="glass p-8 rounded-2xl text-center stat-card">
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-4">GitHub Repos</p>
+                    <p class="text-4xl font-bold text-white mb-2" id="github-repos">20+</p>
+                    <p class="text-gray-500 text-xs">Active Projects</p>
+                </div>
+                <div class="glass p-8 rounded-2xl text-center stat-card">
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-4">Contributions</p>
+                    <p class="text-4xl font-bold text-white mb-2" id="contributions">500+</p>
+                    <p class="text-gray-500 text-xs">This Year</p>
+                </div>
+                <div class="glass p-8 rounded-2xl text-center stat-card">
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-4">Languages</p>
+                    <p class="text-4xl font-bold text-white mb-2" id="languages">8+</p>
+                    <p class="text-gray-500 text-xs">Proficient</p>
+                </div>
+                <div class="glass p-8 rounded-2xl text-center stat-card">
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-4">Research Areas</p>
+                    <p class="text-4xl font-bold text-white mb-2" id="research-areas">5+</p>
+                    <p class="text-gray-500 text-xs">Active Fields</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Recommendations</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass p-10 rounded-2xl">
+                    <p class="serif text-xl text-gray-200 italic mb-6">"Anurag brings exceptional depth to quantum computing research and has a remarkable ability to bridge theoretical concepts with practical implementations."</p>
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest">— Senior Researcher, ISRO</p>
+                </div>
+                <div class="glass p-10 rounded-2xl">
+                    <p class="serif text-xl text-gray-200 italic mb-6">"His work on 5G network optimization demonstrates both technical expertise and innovative thinking. A valuable collaborator in research."</p>
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest">— Professor, IIT Delhi</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reading List Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Reading_List</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="book-card">
+                    <h4 class="text-lg font-bold text-white mb-2">Quantum Computation and Quantum Information</h4>
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-3">Nielsen & Chuang</p>
+                    <p class="text-gray-400 text-sm">Currently Reading</p>
+                </div>
+                <div class="book-card">
+                    <h4 class="text-lg font-bold text-white mb-2">The Art of Computer Programming</h4>
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-3">Donald Knuth</p>
+                    <p class="text-gray-400 text-sm">Reference</p>
+                </div>
+                <div class="book-card">
+                    <h4 class="text-lg font-bold text-white mb-2">Ishopanishad</h4>
+                    <p class="mono text-indigo-400 text-[10px] uppercase tracking-widest mb-3">Traditional</p>
+                    <p class="text-gray-400 text-sm">Philosophy</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activity Feed Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Recent_Activity</span>
+            <div class="glass p-12 rounded-[3rem]">
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4 pb-6 border-b border-white/5">
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                        <div class="flex-1">
+                            <p class="text-gray-300 mb-2">Updated <span class="text-indigo-400">PQC Wireguard Simulator</span> repository</p>
+                            <p class="mono text-gray-500 text-[10px] uppercase tracking-widest">2 days ago</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 pb-6 border-b border-white/5">
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                        <div class="flex-1">
+                            <p class="text-gray-300 mb-2">Published new research on <span class="text-indigo-400">Quantum Internet protocols</span></p>
+                            <p class="mono text-gray-500 text-[10px] uppercase tracking-widest">1 week ago</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+                        <div class="flex-1">
+                            <p class="text-gray-300 mb-2">Presented at <span class="text-indigo-400">IEEE Quantum Computing Conference</span></p>
+                            <p class="mono text-gray-500 text-[10px] uppercase tracking-widest">2 weeks ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact & Social Links Section -->
+        <section class="max-w-[1400px] mx-auto px-8 mb-40" data-aos="fade-up">
+            <span class="section-label">Connect</span>
+            <div class="glass p-16 rounded-[3rem]">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                    <div>
+                        <h3 class="text-3xl font-bold text-white mb-6">Get in Touch</h3>
+                        <p class="text-gray-300 text-lg mb-8 leading-relaxed">Open to collaborations, research discussions, and interesting conversations about quantum computing, networks, and philosophy.</p>
+                        <div class="space-y-4">
+                            <a href="mailto:sharma.anuragkrishna@gmail.com" class="flex items-center gap-4 text-gray-300 hover:text-white transition-colors">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                <span class="mono text-sm">sharma.anuragkrishna@gmail.com</span>
+                            </a>
+                            <a href="https://github.com/akrishnash" target="_blank" class="flex items-center gap-4 text-gray-300 hover:text-white transition-colors">
+                                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                                <span class="mono text-sm">github.com/akrishnash</span>
+                            </a>
+                            <a href="https://linkedin.com/in/anurag-sharma-krishna" target="_blank" class="flex items-center gap-4 text-gray-300 hover:text-white transition-colors">
+                                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                </svg>
+                                <span class="mono text-sm">linkedin.com/in/anurag-sharma-krishna</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold text-white mb-6">Newsletter</h3>
+                        <p class="text-gray-300 mb-6">Subscribe for updates on research, projects, and occasional philosophical musings.</p>
+                        <form id="newsletter-form" class="space-y-4">
+                            <input type="email" placeholder="your.email@example.com" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 mono text-sm">
+                            <button type="submit" class="w-full px-6 py-3 border border-white/10 hover:bg-white hover:text-black transition-all mono text-sm tracking-widest uppercase">Subscribe</button>
+                        </form>
+                        <a href="/resume.pdf" download class="inline-block mt-8 px-8 py-3 border border-indigo-500/50 hover:bg-indigo-500/20 transition-all mono text-sm tracking-widest uppercase text-indigo-400">
+                            Download Resume →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <footer class="max-w-[1400px] mx-auto px-8 pb-20 mt-40 border-t border-white/5 pt-10">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-end">
                 <div class="space-y-2">
@@ -496,6 +912,76 @@ layout: null
 
             // Initialize AOS (Animations)
             AOS.init({ duration: 1000, once: true });
+
+            // Theme Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const newTheme = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+
+            // Language Toggle
+            let currentLang = 'en';
+            const langToggle = document.getElementById('language-toggle');
+            langToggle.addEventListener('click', () => {
+                currentLang = currentLang === 'en' ? 'hi' : 'en';
+                langToggle.textContent = currentLang === 'en' ? 'EN/HI' : 'HI/EN';
+                // Language switching logic can be extended here
+            });
+
+            // Search Functionality
+            const searchToggle = document.getElementById('search-toggle');
+            const searchOverlay = document.getElementById('search-overlay');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+
+            searchToggle.addEventListener('click', () => {
+                searchOverlay.classList.add('active');
+                searchInput.focus();
+            });
+
+            searchOverlay.addEventListener('click', (e) => {
+                if (e.target === searchOverlay) {
+                    searchOverlay.classList.remove('active');
+                }
+            });
+
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Escape') {
+                    searchOverlay.classList.remove('active');
+                }
+                // Search logic can be extended here
+            });
+
+            // Newsletter Form
+            const newsletterForm = document.getElementById('newsletter-form');
+            newsletterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = e.target.querySelector('input[type="email"]').value;
+                // Newsletter subscription logic - can integrate with email service
+                alert('Thank you for subscribing! (Demo mode)');
+                e.target.reset();
+            });
+
+            // Interactive cursor glow effect
+            const cursorGlow = document.createElement('div');
+            cursorGlow.className = 'cursor-glow';
+            document.body.appendChild(cursorGlow);
+            
+            document.addEventListener('mousemove', (e) => {
+                cursorGlow.style.left = e.clientX + 'px';
+                cursorGlow.style.top = e.clientY + 'px';
+            });
+            
+            document.querySelectorAll('a, button, .skill-tag, .book-card').forEach(el => {
+                el.addEventListener('mouseenter', () => cursorGlow.classList.add('active'));
+                el.addEventListener('mouseleave', () => cursorGlow.classList.remove('active'));
+            });
         });
 
         // Your Clock logic (keep this part as is)
